@@ -24,10 +24,9 @@ function displayUsage() {
 }
 
 function get(key) {
-  const encodedKey = encode(key)
-    db.get(encodedKey, function (err, value) {
+    db.get(key, function (err, value) {
       if (err) {
-        console.log('\n\tError: ', err.message)
+        console.log('Error: ', err.message)
       } else {
         console.log(`{ ${key}: ${value} }`)
       }
@@ -36,9 +35,7 @@ function get(key) {
 }
 
 function set(key, value) {
-    const encodedKey = encode(key)
-    const encodedValue = encode(`${value}`)
-    db.put(encodedKey, encodedValue, function (err) {
+    db.put(key, value, function (err) {
       if (err) return console.log(err.message)
       rl.prompt()
     })
@@ -52,14 +49,13 @@ function onLine(line) {
     switch (command) {
         case 'set':
             const pair = args[args.length - 1] || ''
-            const [key='', value=''] = pair.split('=')
+            const [key = '', value = ''] = pair.split('=')
 
             !key.length ? displayUsage() : set(key, value)
             rl.prompt()
             break
         case 'get':
-            const getKey = args[args.length - 1]
-            getKey !== undefined ? get(getKey) : console.log('Key not found\n')
+            args[0] !== undefined ? get(args[0]) : console.log('Key not found\n')
             break
         default:
             displayUsage()
@@ -70,9 +66,7 @@ function onLine(line) {
 
 function main() {
   rl.prompt()
-  rl.on('line', (line) => {
-    onLine(line)
-  })
+  rl.on('line', (line) => onLine(line))
 }
 
 main()
