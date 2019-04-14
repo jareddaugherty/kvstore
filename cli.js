@@ -44,18 +44,14 @@ function set(key, value) {
 
 function onLine(line) {
     const input = line.split(' ')
-    const command = input[0]
-    const args = input.slice(1)
+    const [command, arg = ''] = input
     switch (command) {
         case 'set':
-            const pair = args[args.length - 1] || ''
-            const [key = '', value = ''] = pair.split('=')
-
+            const [key = '', value = ''] = arg.split('=')
             !key.length ? displayUsage() : set(key, value)
-            rl.prompt()
             break
         case 'get':
-            args[0] !== undefined ? get(args[0]) : console.log('Key not found\n')
+            arg.length ? get(arg) : console.log('Key not found\n')
             break
         default:
             displayUsage()
